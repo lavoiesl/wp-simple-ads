@@ -43,3 +43,11 @@ Example:
   if ($banner) $banner->render();
 ?>
 ```
+
+Which outputs:
+
+```html
+<a href="/banner-target.html" title="Awesome banner">
+  <img width="728" height="90" src="http://example.com/wp-content/uploads/2012/05/banner.png" class="attachment-ad-leaderboard" alt="Awesome banner">
+</a>
+```
