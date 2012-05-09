@@ -37,7 +37,7 @@ TODO: Add weights in the random
 Use `SimpleAds\Ad::query_random($location)` or `SimpleAds\Ad::query($location)` for all possible banners
 
 Example: 
-```
+```php
 <?php
   $banner = SimpleAds\Ad::query_random('header');
   if ($banner) $banner->render();
