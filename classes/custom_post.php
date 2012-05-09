@@ -50,14 +50,15 @@ abstract class Custom_Post extends Plugin {
     }
   }
 
-  public function get_id() {
-    if (isset($this->post->term_id)) {
-      return $this->post->term_id;
+  /** Functionnalities **/
+
+  protected function get_id() {
+    if (isset($this->post->ID)) {
+      return $this->post->ID;
     } else {
       return false;
     }
   }
-
 
   /**
    * Magic getter
@@ -108,10 +109,10 @@ abstract class Custom_Post extends Plugin {
   }
 
   public function update_post_terms($terms, $taxonomy='post_tag', $append=true) {
-    if (empty($this->post->ID)) {
+    if (!$this->id) {
       return false;
     } else {
-      return wp_set_post_terms($this->post->ID, $id, $taxonomy, $append);
+      return wp_set_post_terms($this->id, $terms, $taxonomy, $append);
     }
   }
 
@@ -212,6 +213,9 @@ abstract class Custom_Post extends Plugin {
 
     // Check permissions
     if ( !current_user_can( 'edit_post', $post_id ) )
+      return false;
+
+    if (!isset($_POST[static::$post_type]))
       return false;
 
     $post = static::load($post_id);

@@ -33,6 +33,8 @@ abstract class Custom_Term extends Plugin {
     }
   }
 
+  /** Public API **/
+
   /**
    * Loads a Custom_Term
    * @param stdClass|string|int $post
@@ -51,52 +53,6 @@ abstract class Custom_Term extends Plugin {
 
     $class = get_called_class();
     return new $class($term);
-  }
-
-  public function __get($name) {
-    if (method_exists($this, $getter = "get_$name")) {
-      return $this->$getter();
-    } elseif (property_exists($this->term, $name)) {
-      return $this->term->$name;
-    } else {
-      return $this->get_term_meta($name);
-    }
-  }
-
-  public function __set($name, $value) {
-    if (method_exists($this, $setter = "get_$name")) {
-      return $this->$setter($value);
-    } elseif (property_exists($this->term, $name)) {
-      return $this->term->$name = $value;
-    } else {
-      return $this->update_term_meta($name, $value);
-    }
-  }
-
-  public function get_id() {
-    if (isset($this->term->term_id)) {
-      return $this->term->term_id;
-    } else {
-      return false;
-    }
-  }
-
-  protected function get_option_id() {
-    return $this->id ? "taxonomy_term_{$this->id}_meta" : false;
-  }
-
-  public function load_metas() {
-    // Already loaded
-    if (!is_null($this->metas)) return;
-
-    $option_id = $this->get_option_id();
-    $this->metas = array();
-    if ($option_id) {
-      $option = get_option($option_id);
-      if (!empty($option)) {
-        $this->metas = $option;
-      }
-    }
   }
 
   public function get_term_meta($name) {
@@ -144,17 +100,70 @@ abstract class Custom_Term extends Plugin {
     $terms = static::get_terms();
     $terms_options = '';
 
-    foreach ($terms as $key => $f) {
+    foreach ($terms as $key => $term) {
       $terms_options .= 
         '<option value="' . esc_attr($key) . '"'
-          . selected($key, $term, false)
+          . selected($key, $selected, false)
           . ' label="'.esc_attr($f).'">'
-          .   esc_html($f)
+          .   esc_html($term)
         .'</option>';
     }
     
     return $terms_options;
   }
+
+  /** Functionnalities **/
+
+  public function __get($name) {
+    if (method_exists($this, $getter = "get_$name")) {
+      return $this->$getter();
+    } elseif (property_exists($this->term, $name)) {
+      return $this->term->$name;
+    } else {
+      return $this->get_term_meta($name);
+    }
+  }
+
+  public function __set($name, $value) {
+    if (method_exists($this, $setter = "get_$name")) {
+      return $this->$setter($value);
+    } elseif (property_exists($this->term, $name)) {
+      return $this->term->$name = $value;
+    } else {
+      return $this->update_term_meta($name, $value);
+    }
+  }
+
+  protected function get_id() {
+    if (isset($this->term->term_id)) {
+      return $this->term->term_id;
+    } else {
+      return false;
+    }
+  }
+
+  /**
+   * Ensure metas for term are loaded using get_option(taxonomy_term_{$this->id}_meta)
+   */
+  protected function load_metas() {
+    // Already loaded
+    if (!is_null($this->metas)) return;
+
+    $option_id = $this->get_option_id();
+    $this->metas = array();
+    if ($option_id) {
+      $option = get_option($option_id);
+      if (!empty($option)) {
+        $this->metas = $option;
+      }
+    }
+  }
+
+  protected function get_option_id() {
+    return $this->id ? "taxonomy_term_{$this->id}_meta" : false;
+  }
+
+  /** Wordpress Hooks **/
 
   public static function init() {
     static::register_taxonomy();
@@ -197,6 +206,10 @@ abstract class Custom_Term extends Plugin {
     register_taxonomy(static::$taxonomy, static::$post_types, static::get_taxonomy_args());
   }
 
+  /**
+   * Add hooks to manage taxonomy custom fields
+   * @todo Add $taxonomy_add_For_fields (divs, not tables)
+   */
   protected static function register_custom_fields() {
     add_action(static::$taxonomy . '_edit_form_fields', array(get_called_class(), 'edit_form_fields'), 10, 2);
     // add_action(static::$taxonomy . '_add_form_fields', array(get_called_class(), 'display_custom_fields'), 10, 2);
@@ -204,12 +217,17 @@ abstract class Custom_Term extends Plugin {
     add_action('created_' . static::$taxonomy, array(get_called_class(), 'save_custom_fields'), 10, 2);
   }
 
-
+  /**
+   * @hook $taxonomy_edit_form_fields
+   */
   public static function edit_form_fields($term) {
     return static::load($term);
   }
 
-
+  /**
+   * @hook edited_$taxonomy
+   * @hook created_$taxonomy
+   */
   public static function save_custom_fields($term_id) {
     if (isset($_POST['term_meta']) ) {
       $term = static::load($term_id);

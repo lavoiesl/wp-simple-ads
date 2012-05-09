@@ -6,6 +6,9 @@ class Location extends Custom_Term {
   protected static $post_types = array('simple-ad');
   protected static $taxonomy = 'locations';
 
+  /**
+   * Cannot be factorized because the i18n utilities won’t find the strings
+   */
   protected static function get_labels() {
     return array(
       'name' => _x( 'Locations', 'taxonomy general name', static::$plugin_name),
@@ -22,6 +25,9 @@ class Location extends Custom_Term {
     );
   }
 
+  /**
+   * @hook $taxonomy_edit_form_fields
+   */
   public static function edit_form_fields($term) {
     $term = parent::edit_form_fields($term);
     if (!$term) return false;

@@ -164,18 +164,17 @@ HTML;
 
     $uploaded_key = self::$post_type . '-image';
     if (isset($_FILES[$uploaded_key])) {
-      if (!preg_match('/^image\//', $_FILES[$uploaded_key]['type'])) {
+      if (preg_match('/^image\//', $_FILES[$uploaded_key]['type'])) {
         // Not an image, maybe support Flash later
-        return false;
+        $media_id = media_handle_upload($uploaded_key, $post_id);
+        $post->image = $media_id;
       }
-      $media_id = media_handle_upload($uploaded_key, $post_id);
-      $post->image = $media_id;
     }
 
     // Ensure the selected format is applied as a tag
-    $format = Format::load($post->format);
+    $format = Format::load($_POST[self::$post_type]['format']);
     if ($format) {
-      $post->update_post_terms($format->id, 'formats', false /* Replace existing (only one) */);
+      $r = $post->update_post_terms($format->id, 'formats', false /* Replace existing (only one) */);
     }
 
   }

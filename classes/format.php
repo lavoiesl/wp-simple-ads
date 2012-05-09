@@ -6,6 +6,9 @@ class Format extends Custom_Term {
   protected static $post_types = array('simple-ad');
   protected static $taxonomy = 'formats';
 
+  /**
+   * @hook $taxonomy_edit_form_fields
+   */
   public static function edit_form_fields($term) {
     $term = parent::edit_form_fields($term);
     if (!$term) return false;
@@ -31,7 +34,9 @@ class Format extends Custom_Term {
     <?php
   }
 
-
+  /**
+   * Cannot be factorized because the i18n utilities won’t find the strings
+   */
   protected static function get_labels() {
     return array(
       'name' => _x( 'Formats', 'taxonomy general name', static::$plugin_name),
@@ -53,6 +58,9 @@ class Format extends Custom_Term {
     static::register_formats();
   }
 
+  /**
+   * Register each Format as an image size for the Media Gallery
+   */
   public static function register_formats() {
     $formats = static::get_terms();
     foreach ($formats as $key => $format) {
