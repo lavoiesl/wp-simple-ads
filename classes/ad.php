@@ -50,7 +50,7 @@ class Ad extends Custom_Post {
 
   public function get_image_html() {
     if (!$this->image || !$this->format) return false;
-    return wp_get_attachment_image($this->image, "ad-{$this->format}", false, array('title' => $this->post_title));
+    return wp_get_attachment_image($this->image, "ad-{$this->format}", false, array('alt' => $this->post_title));
   }
 
 
