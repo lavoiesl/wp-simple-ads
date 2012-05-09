@@ -1,0 +1,259 @@
+# Copyright (C) 2012 
+# This file is distributed under the same license as the  package.
+msgid ""
+msgstr ""
+"Project-Id-Version:  \n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/wp-simple-ads\n"
+"POT-Creation-Date: 2012-05-09 06:45:18+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2012-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+
+#: classes/ad.php:58
+msgid "Ad Setup"
+msgstr ""
+
+#: classes/ad.php:59
+msgid "Ad Preview"
+msgstr ""
+
+#: classes/ad.php:107 classes/ad.php:119
+msgctxt "post type general name"
+msgid "Ads"
+msgstr ""
+
+#: classes/ad.php:108
+msgctxt "post type singular name"
+msgid "Ad"
+msgstr ""
+
+#: classes/ad.php:109 classes/custom_post.php:98
+msgid "Add New"
+msgstr ""
+
+#: classes/ad.php:110
+msgid "Add New Ad"
+msgstr ""
+
+#: classes/ad.php:111
+msgid "Edit Ad"
+msgstr ""
+
+#: classes/ad.php:112
+msgid "New Ad"
+msgstr ""
+
+#: classes/ad.php:113
+msgid "All Ads"
+msgstr ""
+
+#: classes/ad.php:114
+msgid "View Ad"
+msgstr ""
+
+#: classes/ad.php:115
+msgid "Search Ads"
+msgstr ""
+
+#: classes/ad.php:116
+msgid "No Ad found"
+msgstr ""
+
+#: classes/ad.php:117
+msgid "No Ad found in Trash"
+msgstr ""
+
+#: classes/custom_post.php:96 classes/custom_post.php:108
+msgctxt "post type general name"
+msgid "Posts"
+msgstr ""
+
+#: classes/custom_post.php:97
+msgctxt "post type singular name"
+msgid "Post"
+msgstr ""
+
+#: classes/custom_post.php:99
+msgid "Add New Post"
+msgstr ""
+
+#: classes/custom_post.php:100
+msgid "Edit Post"
+msgstr ""
+
+#: classes/custom_post.php:101
+msgid "New Post"
+msgstr ""
+
+#: classes/custom_post.php:102
+msgid "All Posts"
+msgstr ""
+
+#: classes/custom_post.php:103
+msgid "View Post"
+msgstr ""
+
+#: classes/custom_post.php:104
+msgid "Search Posts"
+msgstr ""
+
+#: classes/custom_post.php:105
+msgid "No Post found"
+msgstr ""
+
+#: classes/custom_post.php:106
+msgid "No Post found in Trash"
+msgstr ""
+
+#: classes/custom_taxonomy.php:129
+msgctxt "taxonomy general name"
+msgid "Terms"
+msgstr ""
+
+#: classes/custom_taxonomy.php:130
+msgctxt "taxonomy singular name"
+msgid "Term"
+msgstr ""
+
+#: classes/custom_taxonomy.php:131
+msgid "Search Terms"
+msgstr ""
+
+#: classes/custom_taxonomy.php:132
+msgid "Popular Terms"
+msgstr ""
+
+#: classes/custom_taxonomy.php:133
+msgid "All Terms"
+msgstr ""
+
+#: classes/custom_taxonomy.php:134
+msgid "Parent Term"
+msgstr ""
+
+#: classes/custom_taxonomy.php:135
+msgid "Parent Term:"
+msgstr ""
+
+#: classes/custom_taxonomy.php:136
+msgid "Edit Term"
+msgstr ""
+
+#: classes/custom_taxonomy.php:137
+msgid "Update Term"
+msgstr ""
+
+#: classes/custom_taxonomy.php:138
+msgid "Add New Term"
+msgstr ""
+
+#: classes/custom_taxonomy.php:139
+msgid "New Term Name"
+msgstr ""
+
+#: classes/format.php:16
+msgid "Width"
+msgstr ""
+
+#: classes/format.php:24
+msgid "Height"
+msgstr ""
+
+#: classes/format.php:37
+msgctxt "taxonomy general name"
+msgid "Formats"
+msgstr ""
+
+#: classes/format.php:38
+msgctxt "taxonomy singular name"
+msgid "Format"
+msgstr ""
+
+#: classes/format.php:39
+msgid "Search Formats"
+msgstr ""
+
+#: classes/format.php:40
+msgid "Popular Formats"
+msgstr ""
+
+#: classes/format.php:41
+msgid "All Formats"
+msgstr ""
+
+#: classes/format.php:42
+msgid "Parent Format"
+msgstr ""
+
+#: classes/format.php:43
+msgid "Parent Format:"
+msgstr ""
+
+#: classes/format.php:44
+msgid "Edit Format"
+msgstr ""
+
+#: classes/format.php:45
+msgid "Update Format"
+msgstr ""
+
+#: classes/format.php:46
+msgid "Add New Format"
+msgstr ""
+
+#: classes/format.php:47
+msgid "New Format Name"
+msgstr ""
+
+#: classes/location.php:11
+msgctxt "taxonomy general name"
+msgid "Locations"
+msgstr ""
+
+#: classes/location.php:12
+msgctxt "taxonomy singular name"
+msgid "Location"
+msgstr ""
+
+#: classes/location.php:13
+msgid "Search Locations"
+msgstr ""
+
+#: classes/location.php:14
+msgid "Popular Locations"
+msgstr ""
+
+#: classes/location.php:15
+msgid "All Locations"
+msgstr ""
+
+#: classes/location.php:16
+msgid "Parent Location"
+msgstr ""
+
+#: classes/location.php:17
+msgid "Parent Location:"
+msgstr ""
+
+#: classes/location.php:18
+msgid "Edit Location"
+msgstr ""
+
+#: classes/location.php:19
+msgid "Update Location"
+msgstr ""
+
+#: classes/location.php:20
+msgid "Add New Location"
+msgstr ""
+
+#: classes/location.php:21
+msgid "New Location Name"
+msgstr ""
+
+#: classes/location.php:35
+msgid "Format"
+msgstr ""
