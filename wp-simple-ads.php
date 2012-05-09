@@ -12,7 +12,7 @@
 require __DIR__ . '/classes/plugin.php';
 require __DIR__ . '/classes/custom_post.php';
 require __DIR__ . '/classes/ad.php';
-require __DIR__ . '/classes/custom_taxonomy.php';
+require __DIR__ . '/classes/custom_term.php';
 require __DIR__ . '/classes/format.php';
 require __DIR__ . '/classes/location.php';
 

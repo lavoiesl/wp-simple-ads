@@ -2,7 +2,7 @@
 
 namespace SimpleAds;
 
-class Location extends Custom_Taxonomy {
+class Location extends Custom_Term {
   protected static $post_types = array('simple-ad');
   protected static $taxonomy = 'locations';
 

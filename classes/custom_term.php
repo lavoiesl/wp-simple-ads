@@ -2,16 +2,30 @@
 
 namespace SimpleAds;
 
-abstract class Custom_Taxonomy extends Plugin {
+abstract class Custom_Term extends Plugin {
   /**
+   * Array of post types identifiers to bind to
    * Needs to be overridden
+   * @var array
    */
   protected static $post_types = array();
+  /**
+   * Custom Taxonomy identifier
+   * Needs to be overridden
+   * @var string
+   */
   protected static $taxonomy = null;
 
-  protected 
-    $term = null, 
-    $metas = null;
+  /**
+   * Wordpress term object
+   * @var stdClass
+   */
+  protected $term = null;
+  /**
+   * Array containing term metas
+   * @var array
+   */
+  protected $metas = null;
 
   public function __construct($term=null) {
     if (is_object($term)) {
@@ -19,7 +33,15 @@ abstract class Custom_Taxonomy extends Plugin {
     }
   }
 
+  /**
+   * Loads a Custom_Term
+   * @param stdClass|string|int $post
+   * @return Custom_Term
+   */
   public static function load($term) {
+    if (!$term) {
+      return false;
+    }
     if (is_numeric($term)) {
       $term = get_term($term, static::$taxonomy);
     } elseif (is_string($term)) {
@@ -34,7 +56,7 @@ abstract class Custom_Taxonomy extends Plugin {
   public function __get($name) {
     if (method_exists($this, $getter = "get_$name")) {
       return $this->$getter();
-    } elseif (isset($this->term->$name)) {
+    } elseif (property_exists($this->term, $name)) {
       return $this->term->$name;
     } else {
       return $this->get_term_meta($name);
@@ -44,7 +66,7 @@ abstract class Custom_Taxonomy extends Plugin {
   public function __set($name, $value) {
     if (method_exists($this, $setter = "get_$name")) {
       return $this->$setter($value);
-    } elseif (isset($this->term->$name)) {
+    } elseif (property_exists($this->term, $name)) {
       return $this->term->$name = $value;
     } else {
       return $this->update_term_meta($name, $value);
@@ -114,6 +136,25 @@ abstract class Custom_Taxonomy extends Plugin {
     return $objects;
   }
 
+  /**
+   * HTML for <option/> tag, to put in a <select/>, listing all values
+   * @param string $selected Current selected value
+   */
+  public static function get_option_tags($selected=null) {
+    $terms = static::get_terms();
+    $terms_options = '';
+
+    foreach ($terms as $key => $f) {
+      $terms_options .= 
+        '<option value="' . esc_attr($key) . '"'
+          . selected($key, $term, false)
+          . ' label="'.esc_attr($f).'">'
+          .   esc_html($f)
+        .'</option>';
+    }
+    
+    return $terms_options;
+  }
 
   public static function init() {
     static::register_taxonomy();

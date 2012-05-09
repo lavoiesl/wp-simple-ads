@@ -2,7 +2,7 @@
 
 namespace SimpleAds;
 
-class Format extends Custom_Taxonomy {
+class Format extends Custom_Term {
   protected static $post_types = array('simple-ad');
   protected static $taxonomy = 'formats';
 

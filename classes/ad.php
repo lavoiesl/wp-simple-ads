@@ -3,14 +3,33 @@
 namespace SimpleAds;
 
 class Ad extends Custom_Post {
+  /**
+   * Custom Post Type identifier
+   * @var string
+   */
   protected static $post_type = 'simple-ad';
 
+  /** Public API **/
+
+  /**
+   * Query a random Ad, filtering by location and/or format
+   * @todo Add support for weights
+   * @param string $location_slug Short name of location. Ex: header
+   * @param string $format_slug Short name of location. Ex: leaderboard
+   * @return array Ad[]
+   */
   public static function query_random($location_slug=null, $format_slug=null) {
     $ads = self::query($location_slug, $format_slug);
     shuffle($ads);
     return current($ads);
   }
 
+  /**
+   * Query Ads, filtering by location and/or format
+   * @param string $location_slug Short name of location. Ex: header
+   * @param string $format_slug Short name of location. Ex: leaderboard
+   * @return array Ad[]
+   */
   public static function query($location_slug=null, $format_slug=null) {
     $options = array(
       'post_type' => static::$post_type,
@@ -18,6 +37,7 @@ class Ad extends Custom_Post {
     if ($location_slug && ($location = Location::load($location_slug))) {
       $options['locations'] = $location_slug;
       if (!$format_slug) {
+        // If format not specified, use from location to prevent ads with incompatible sizes
         if ($location->format) {
           $format_slug = $location->format;
         }
@@ -35,50 +55,62 @@ class Ad extends Custom_Post {
     return $ads;
   }
 
+  /**
+   * Render the Ad HTML, including the <a/>
+   * If image or format is invalid, outputs nothing
+   */
   public function render() {
+    $image_html = $this->get_image_html();
+    if (!$image_html) return;
+
     if ($this->link) {
       $link = esc_attr($this->link);
       $title = esc_attr($this->post_title);
       $target = $this->new_window ? ' target="_blank"' : '';
-      echo "<a href=\"$link\" $target title=\"$title\">";
-      echo $this->get_image_html();
-      echo "</a>";
+      echo <<<HTML
+
+      <a href="$link" $target title="$title">
+        $image_html
+      </a>
+HTML;
     } else {
-      echo $this->get_image_html();
+      echo $image_html;
     }
   }
 
   public function get_image_html() {
     if (!$this->image || !$this->format) return false;
-    return wp_get_attachment_image($this->image, "ad-{$this->format}", false, array('alt' => $this->post_title));
+    // Image formats are registered in Format::register_formats()
+    return wp_get_attachment_image($this->image, "ad-{$this->format}", false /* icon */, array('alt' => $this->post_title));
   }
 
+  /** Wordpress hooks **/
 
   public static function add_meta_boxes() {
-    static::add_meta_box('setup', __( 'Ad Setup', self::$plugin_name));
-    static::add_meta_box('preview', __( 'Ad Preview', self::$plugin_name));
+    static::add_meta_box('setup', __('Ad Setup', self::$plugin_name));
+    static::add_meta_box('preview', __('Ad Preview', self::$plugin_name));
   }
 
+  /**
+   * Displays the banner as it would appear
+   */
   public static function display_preview_meta_box($post) {
-    static::load($post)->render();
+    $ad = static::load($post);
+    if (!$ad) return;
+    $ad->render();
   }
 
+  /**
+   * Main admin form
+   */
   public static function display_setup_meta_box($post) {
     $ad = static::load($post);
-    $post_type = static::$post_type;
     $link = esc_attr($ad->link);
-    $new_window = checked($ad->new_window, true, false);
-    $zone = $ad->zone;
-    $format = $ad->format;
+    $new_window = checked($ad->new_window, true /* compare */, false /* output */);
     
-    $formats = Format::get_terms();
+    $formats_options = Format::get_option_tags($ad->format);
 
-    $formats_options = '';
-    foreach ($formats as $key => $f) {
-      $name = esc_attr($f);
-      $formats_options .= '<option value="' . esc_attr($key) . '"'.selected($key, $format, false). ' label="'.$name.'">'.$name.'</option>';
-    }
-
+    $post_type = static::$post_type;
     echo <<<HTML
 
       <p>
@@ -89,7 +121,7 @@ class Ad extends Custom_Post {
       </p>
       <p>
         <label for="{$post_type}-image">Image</label>
-        <input type="file" name="{$post_type}-image" id="{$post_type}-image">$image
+        <input type="file" name="{$post_type}-image" id="{$post_type}-image">
       </p>
       <p>
         <label for="{$post_type}-link">Link</label>
@@ -102,6 +134,9 @@ class Ad extends Custom_Post {
 HTML;
   }
 
+  /**
+   * Cannot be factorized because the i18n utilities won’t find the strings
+   */
   protected static function get_labels() {
     return array(
       'name' => _x('Ads', 'post type general name', static::$plugin_name),
@@ -120,20 +155,27 @@ HTML;
     );
   }
 
+  /**
+   * @hook save_post
+   */
   public static function save_post($post_id) {
     $post = parent::save_post($post_id);
     if (!$post) return false;
 
-    if (isset($_FILES[self::$post_type . '-image']) && preg_match('/^image\//', $_FILES[self::$post_type . '-image']['type'])) {
-      $media_id = media_handle_upload(self::get_meta_key("image"), $post_id);
+    $uploaded_key = self::$post_type . '-image';
+    if (isset($_FILES[$uploaded_key])) {
+      if (!preg_match('/^image\//', $_FILES[$uploaded_key]['type'])) {
+        // Not an image, maybe support Flash later
+        return false;
+      }
+      $media_id = media_handle_upload($uploaded_key, $post_id);
       $post->image = $media_id;
     }
 
-    $format = $post->format;
+    // Ensure the selected format is applied as a tag
+    $format = Format::load($post->format);
     if ($format) {
-      $f = Format::load($format);
-      $id = (int) $f->id;
-      wp_set_post_terms($post_id, $id, 'formats', false);
+      $post->update_post_terms($format->id, 'formats', false /* Replace existing (only one) */);
     }
 
   }
